@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:somethingg/Screens/AccoutInfo.dart';
+import 'package:somethingg/Screens/addPost.dart';
+import 'package:somethingg/Utilities/colors.dart';
+import 'package:somethingg/Screens/feed.dart';
 
 class MobileResponse extends StatefulWidget {
   const MobileResponse({Key? key}) : super(key: key);
@@ -10,36 +12,59 @@ class MobileResponse extends StatefulWidget {
   State<MobileResponse> createState() => _MobileResponseState();
 }
 
-String userName = '';
-
 class _MobileResponseState extends State<MobileResponse> {
+  int _currentIndex =0;
+  late PageController pageController;
+
   @override
   void initState() {
-    //getUsername();
+    pageController = PageController();
     super.initState();
   }
-
-  // void getUsername() async {
-  //   DocumentSnapshot snap = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get();
-  //   setState(() {
-  //     userName = (snap.data() as Map<String, dynamic>)['userName'];
-  //   });
-  // }
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+  void pageChanged(int index){
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+  void onTapped(int page){
+     pageController.jumpToPage(page);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Scaffold(
-      appBar: AppBar(title: Text("${userName}"),),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("This is the card !",style: TextStyle(fontSize: 50),),
-          ),color: Colors.red,),
+
+    return MaterialApp(home: SafeArea(
+      child: Scaffold(
+        backgroundColor: mobileBackgroundColor,
+        body: PageView(
+          children: [
+             FeedScreen(),
+             Text("Second page",style: TextStyle(color: Colors.white)),
+            PostScreen(),
+            Text("Fourth page",style: TextStyle(color: Colors.white)),
+            Text("Some info about accout !",style: TextStyle(color: Colors.blueAccent),),
+          ],
+          controller: pageController,
+          onPageChanged:pageChanged ,
+          physics: NeverScrollableScrollPhysics(),
+        ),
+        bottomNavigationBar: BottomNavigationBar(backgroundColor: mobileBackgroundColor,
+          type: BottomNavigationBarType.fixed,
+          items:<BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home,size: 40,color: _currentIndex==0?primaryColor:secondaryColor,),label: '',backgroundColor: primaryColor),
+          BottomNavigationBarItem(icon: Icon(Icons.search,size: 40,color: _currentIndex==1?primaryColor:secondaryColor,),label: '',backgroundColor: primaryColor),
+          BottomNavigationBarItem(icon: Icon(Icons.add_circle,size: 40,color: _currentIndex==2?primaryColor:secondaryColor,),label: '',backgroundColor: primaryColor),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite,size: 40,color: _currentIndex==3?primaryColor:secondaryColor,),label: '',backgroundColor: primaryColor),
+            BottomNavigationBarItem(icon: Icon(Icons.person,size: 40,color: _currentIndex==4?primaryColor:secondaryColor,),label: '',backgroundColor: primaryColor)
+        ],
+        currentIndex: _currentIndex,
+          onTap: onTapped,
+        ),
       ),
     ),);
   }

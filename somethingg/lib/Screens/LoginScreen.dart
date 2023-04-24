@@ -22,7 +22,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passEditingController = TextEditingController();
   String result = 'some error';
   bool _isLoading = false;
+  @override
   void dispose() {
+    // TODO: implement dispose
+    super.dispose();
     _passEditingController.dispose();
     _textEditingController.dispose();
   }

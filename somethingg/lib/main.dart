@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:somethingg/Providers/user_provider.dart';
 import 'package:somethingg/Screens/LoginScreen.dart';
 import 'package:somethingg/Screens/SignupScreen.dart';
 import 'package:somethingg/Utilities/colors.dart';
@@ -31,28 +33,33 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData().copyWith(
-        scaffoldBackgroundColor: mobileBackgroundColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=>UserProvider(),),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData().copyWith(
+          scaffoldBackgroundColor: mobileBackgroundColor,
+        ),
+        home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),builder:(context,snapshot){  //this method help user to be logged in
+            if(snapshot.connectionState == ConnectionState.active) {
+              if (snapshot.hasData) {
+                return const Response_Selection(
+                  Mobile: MobileResponse(),
+                  Web: WebResponse(),
+                );
+              }
+              else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+            }
+            if(snapshot.connectionState==ConnectionState.waiting){
+              return const Center(child: CircularProgressIndicator(color: primaryColor,));
+            }
+            return LoginScreen();
+        }),
       ),
-      home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),builder:(context,snapshot){  //this method help user to be logged in
-          if(snapshot.connectionState == ConnectionState.active) {
-            if (snapshot.hasData) {
-              return const Response_Selection(
-                Mobile: MobileResponse(),
-                Web: WebResponse(),
-              );
-            }
-            else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-          }
-          if(snapshot.connectionState==ConnectionState.waiting){
-            return const Center(child: CircularProgressIndicator(color: primaryColor,));
-          }
-          return LoginScreen();
-      }),
     );
   }
 }

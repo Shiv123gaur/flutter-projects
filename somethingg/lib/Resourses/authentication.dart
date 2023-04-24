@@ -58,7 +58,7 @@ class Authentication {
 
 
   Future<model.User> getUserdetails()async{
-    User currentUser = await _auth.currentUser!;
+    User currentUser =  _auth.currentUser!;
     DocumentSnapshot snapshot = await _firestore.collection('users').doc(currentUser.uid).get();
     return model.User.fromSnap(snapshot);
   }
