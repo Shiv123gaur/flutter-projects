@@ -1,0 +1,118 @@
+import 'dart:ui';
+
+import 'package:ecommerce/controllers/popular_product_controller.dart';
+import 'package:ecommerce/data/repositories/cart_repo.dart';
+import 'package:ecommerce/models/cartModel.dart';
+import 'package:ecommerce/models/popular_products_model.dart';
+import 'package:get/get.dart';
+
+class CartController extends GetxController{
+   CartController({required this.cart_repo});
+   final Cart_repo cart_repo;
+
+   Map<int,CartModel> _items={};
+   Map<int,CartModel> get cartItems=>_items;
+
+   void Add_to_Cart(Products products,int quantity){
+     var totalQuantity;
+     if(_items.containsKey(products.id)){
+       _items.update(products.id!, (value){
+         totalQuantity = value.quantity!+quantity;
+         if(totalQuantity>0 && totalQuantity<=20){
+           return CartModel(
+             id: value.id,
+             name: value.name,
+             price: value.price,
+             img: value.img,
+             quantity: value.quantity!+quantity,
+             time: DateTime.now().toString(),
+             product: products
+           );
+         }else{
+           (totalQuantity<=0)?Get.snackbar("Add some quantity !!", "Zero cant't be added.",backgroundColor:Color(0xff01FFFF)):Get.snackbar("You cannot add more than 20,sorry!!", "Deduct some quantity",backgroundColor:Color(0xff01FFFF));
+           return CartModel(
+             id: value.id,
+             name: value.name,
+             price: value.price,
+             img: value.img,
+             quantity: value.quantity,
+             time: DateTime.now().toString(),
+             product: products
+           );
+         }
+       });
+       if(totalQuantity<=0){
+         _items.remove(products.id);
+       }
+     }else{
+       _items.putIfAbsent(products.id!, () {
+         totalQuantity = quantity;
+         if(quantity>0 && quantity<=20){
+           return CartModel(
+             id: products.id,
+             name: products.name,
+             price: products.price,
+             img: products.img,
+             quantity: quantity,
+             time: DateTime.now().toString(),
+             product: products
+           );
+         }else{
+           (totalQuantity<=0)?Get.snackbar("Add some quantity !!", "Zero cant't be added.",backgroundColor:Color(0xff01FFFF)):Get.snackbar("You cannot add more than 20,sorry!!", "Deduct some quantity",backgroundColor:Color(0xff01FFFF));
+           return CartModel(
+             id: products.id,
+             name: products.name,
+             price: products.price,
+             img: products.img,
+             quantity: quantity,
+             time: DateTime.now().toString(),
+             product: products
+           );
+         }
+       });
+       if(totalQuantity<=0){
+         _items.remove(products.id);
+       }
+     }
+     update();
+   }
+
+    int getQuantity(Products product){
+      int quantityy=0;
+       if(_items.containsKey(product.id)){
+          _items.forEach((key, value) {
+               if(key==product.id!){
+                  quantityy = value.quantity!;
+               }
+          });
+          return quantityy;
+       }
+       return 0;
+   }
+
+   int get CartTotal{
+     var cartt=0;
+     _items.forEach((key, value) {
+        cartt += value.quantity!;
+     });
+     return cartt;
+   }
+   List<CartModel> get cartItemss{
+     return  _items.entries.map((e) {
+        return e.value;
+     }).toList();
+   }
+
+   int get totalAmount{
+     var total = 0;
+     _items.forEach((key, value) {
+        total = total+(value.quantity!*value.price!);
+     });
+     return total;
+   }
+
+
+}
+
+
+

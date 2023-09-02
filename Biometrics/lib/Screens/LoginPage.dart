@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(height: 5.h,),
-                Lottie.asset("animations/3.json",height: 30.h),
+                Lottie.asset("animations/3.json",height: 30.h),  //animation
                 SizedBox(
                   height: 5.h,
                 ),

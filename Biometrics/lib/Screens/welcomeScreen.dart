@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             borderRadius: BorderRadius.circular(10),
                             color: colorss().primarycolor),
                         child: Center(
-                          child: Lottie.asset("animations/5.json",height: 20.h,)
+                          child: Lottie.asset("animations/5.json",height: 20.h,)  //1 box
                         ),
                       ),
                     ),
@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Lottie.asset("animations/6.json",height: 20.h),
+                        Lottie.asset("animations/6.json",height: 20.h),  //second anima
                         SizedBox(
                           height: 0.2.h,
                         ),
@@ -82,7 +82,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 onPressed: (){
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => LoginPage()));
-                            }, child: Text("Login")),
+                            }, child: Text("Login")),  //login/signup
                             SizedBox(
                               width: 4.0.h,
                             ),

@@ -52,7 +52,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   padding: EdgeInsets.all(20.sp),
                   child: Column(
                     children: [
-                      Lottie.asset("animations/2.json",height: 30.h),
+                      Lottie.asset("animations/2.json",height: 30.h), //anim
                       SizedBox(
                         height: 10.h,
                       ),
