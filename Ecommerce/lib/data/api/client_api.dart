@@ -18,6 +18,13 @@ class ApiClient extends GetConnect implements GetxService{
         };
     }
 
+    void updateHeaders(String tokenn){
+        _headers = {
+            'Content-type':'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $tokenn',
+        };
+    }
+
     //   WAS GIVING NULL IN RESPONSE SO SKIPPED GET AND USED HTTPS INSTEAD
     // Future<Response> gettPopularProduct(String uri)async{
     //      try{
@@ -34,6 +41,16 @@ class ApiClient extends GetConnect implements GetxService{
         head = {"Bearer":"${AppConstants.TOKEN}"};
         https.Response response = await https.get(Uri.parse(AppConstants.BASE_URL+endUrl),headers: head);
         return response;
+    }
+
+    Future<https.Response> postData(String uri,dynamic bodyy) async {
+        try{
+            https.Response response = await https.post(Uri.parse(uri),headers: _headers,body: bodyy);
+            return response;
+        }catch(e){
+            return https.Response(e.toString(),1);
+        }
+
     }
 
 }

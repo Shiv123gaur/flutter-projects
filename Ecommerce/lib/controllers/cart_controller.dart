@@ -4,6 +4,8 @@ import 'package:ecommerce/controllers/popular_product_controller.dart';
 import 'package:ecommerce/data/repositories/cart_repo.dart';
 import 'package:ecommerce/models/cartModel.dart';
 import 'package:ecommerce/models/popular_products_model.dart';
+import 'package:ecommerce/routes/routes_helper.dart';
+import 'package:ecommerce/screens/cart/order_history.dart';
 import 'package:get/get.dart';
 
 class CartController extends GetxController{
@@ -11,7 +13,14 @@ class CartController extends GetxController{
    final Cart_repo cart_repo;
 
    Map<int,CartModel> _items={};
+   List<CartModel> StorageItems = [];
+   List<CartModel> History = [];
    Map<int,CartModel> get cartItems=>_items;
+   List<CartModel> get history =>History;
+
+   set cartPage(Map<int,CartModel> moree){
+      _items = moree;
+   }
 
    void Add_to_Cart(Products products,int quantity){
      var totalQuantity;
@@ -44,7 +53,8 @@ class CartController extends GetxController{
        if(totalQuantity<=0){
          _items.remove(products.id);
        }
-     }else{
+     }
+     else{
        _items.putIfAbsent(products.id!, () {
          totalQuantity = quantity;
          if(quantity>0 && quantity<=20){
@@ -74,6 +84,7 @@ class CartController extends GetxController{
          _items.remove(products.id);
        }
      }
+     cart_repo.addItemsSharedpreferences(cartItemss);
      update();
    }
 
@@ -101,6 +112,7 @@ class CartController extends GetxController{
      return  _items.entries.map((e) {
         return e.value;
      }).toList();
+
    }
 
    int get totalAmount{
@@ -110,6 +122,42 @@ class CartController extends GetxController{
      });
      return total;
    }
+
+
+   List<CartModel> get GetStoredData{
+     storageData = cart_repo.getCartItems();
+      return StorageItems;
+   }
+
+   set storageData(List<CartModel> list){
+      StorageItems = list;
+      for(int i=0;i<StorageItems.length;i++){
+         _items.putIfAbsent(StorageItems[i].product!.id!, () =>StorageItems[i]);
+      }
+   }
+
+
+   void AddHistory(){
+     cart_repo.AddCartHistory();
+     clear();
+   }
+   void clear(){
+     _items = {};
+     update();
+   }
+
+   List<CartModel> getHistory(){
+     History = cart_repo.getHistory();
+     return History;
+   }
+
+   void addToSharedpreferences(){
+     cart_repo.addItemsSharedpreferences(cartItemss);
+     update();
+   }
+
+
+
 
 
 }

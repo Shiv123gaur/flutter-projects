@@ -33,7 +33,7 @@ class Recommended_Food extends StatelessWidget {
                   GestureDetector(
                       onTap: () {
                         if(page=="cart"){
-                          Get.toNamed(Routes.got_to_cartHome());
+                          Get.toNamed(Routes.got_to_cartHome(false));
                         }else{
                           Get.toNamed(Routes.go_to_home());
                         }
@@ -52,7 +52,7 @@ class Recommended_Food extends StatelessWidget {
                            children: [
                              GestureDetector(
                                onTap: (){
-                                 Get.toNamed(Routes.got_to_cartHome());
+                                 Get.toNamed(Routes.got_to_cartHome(false));
                                },
                                child: AppIcon(
                                    iconbackground: Icons.circle,

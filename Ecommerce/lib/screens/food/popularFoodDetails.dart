@@ -45,7 +45,8 @@ class PopularFood_Details extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     if(page=="cart"){
-                      Get.toNamed(Routes.got_to_cartHome());
+                      Get.toNamed(Routes.got_to_cartHome(false));
+
                     }else{
                       Get.toNamed(Routes.go_to_home());
                     }
@@ -58,12 +59,17 @@ class PopularFood_Details extends StatelessWidget {
                 right: dimentions.width10,
                 top: 50,
                 child: Get.find<PopularProductController>().Get_Cart_Items <= 0
-                    ? AppIcon(
-                        iconbackground: Icons.circle,
-                        icontop: Icons.shopping_cart)
+                    ? GestureDetector(
+                      onTap: (){
+                       Get.toNamed(Routes.got_to_cartHome(true));
+                      },
+                      child: AppIcon(
+                          iconbackground: Icons.circle,
+                          icontop: Icons.shopping_cart),
+                    )
                     : GestureDetector(
                      onTap: (){
-                       Get.toNamed(Routes.got_to_cartHome());
+                       Get.toNamed(Routes.got_to_cartHome(false));
                      },
                       child: Stack(
                           children: [

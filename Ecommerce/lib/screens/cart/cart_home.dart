@@ -14,15 +14,22 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ecommerce/screens/Home/home_food_page.dart';
 
-class Cart_Home extends StatelessWidget {
-  const Cart_Home({Key? key}) : super(key: key);
+class Cart_Home extends StatefulWidget {
+  const Cart_Home({Key? key,required this.empty}) : super(key: key);
+  final bool empty;
 
+  @override
+  State<Cart_Home> createState() => _Cart_HomeState();
+}
+
+class _Cart_HomeState extends State<Cart_Home> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: GetBuilder<CartController>(builder: (cartcontroller){
-          return Column(
+          return cartcontroller.cartItemss.length>0
+              ?Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(flex: 1,
@@ -87,18 +94,22 @@ class Cart_Home extends StatelessWidget {
                                     Get.toNamed(Routes.go_to_popularFood(indexx,"cart"));
                                   }else{
                                     var indexxx = Get.find<Recommended_products_Controller>().products.indexOf(cartcontroller.cartItemss[index].product!);
-                                    Get.toNamed(Routes.go_to_recommendedFood(indexxx,"cart"));
+                                    if(indexxx>=0){
+                                      Get.toNamed(Routes.go_to_recommendedFood(indexxx,"cart"));
+                                    }else{
+                                      Get.snackbar("History item!!", "Cannot be reviewed");
+                                    }
                                   }
                                 },
                                 child: Container(
                                   height:dimentions.height110,
                                   width: dimentions.width150,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(AppConstants.BASE_URL+ "/uploads/" +cartcontroller.cartItemss[index].img!)
-                                    )
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(AppConstants.BASE_URL+ "/uploads/" +cartcontroller.cartItemss[index].img!)
+                                      )
                                   ),
                                 ),
                               ),
@@ -134,7 +145,7 @@ class Cart_Home extends StatelessWidget {
                                             SmallFont(text:cartcontroller.cartItemss[index].quantity.toString()),
                                             GestureDetector(
                                                 onTap: (){
-                                                    cartcontroller.Add_to_Cart(cartcontroller.cartItemss[index].product!, 1);
+                                                  cartcontroller.Add_to_Cart(cartcontroller.cartItemss[index].product!, 1);
                                                 },
                                                 child: Icon(Icons.add))
                                           ],
@@ -173,27 +184,48 @@ class Cart_Home extends StatelessWidget {
                               GoogleFonts.nunito(fontSize: dimentions.font20),
                             )),
                       ),
-                      Container(
-                        height: dimentions.height50,
-                        width: dimentions.width30 * 4,
-                        decoration: BoxDecoration(
-                            color: Colors.greenAccent,
-                            borderRadius:
-                            BorderRadius.circular(dimentions.radius10)),
-                        child: Center(
-                            child: Text(
-                              "Check Out",
-                              style:
-                              GoogleFonts.nunito(fontSize: dimentions.font10),
-                            )),
+                      GestureDetector(
+                        onTap: (){
+                          cartcontroller.AddHistory();
+                        },
+                        child: Container(
+                          height: dimentions.height50,
+                          width: dimentions.width30 * 4,
+                          decoration: BoxDecoration(
+                              color: Colors.greenAccent,
+                              borderRadius:
+                              BorderRadius.circular(dimentions.radius10)),
+                          child: Center(
+                              child: Text(
+                                "Check Out",
+                                style:
+                                GoogleFonts.nunito(fontSize: dimentions.font10),
+                              )),
+                        ),
                       ),
                     ],
                   ),
                 ),
               )
             ],
-          );
-        })
+          )
+              :Scaffold(backgroundColor: Colors.greenAccent,
+            body: Center(
+              child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: (){
+                    Get.toNamed(Routes.go_to_home());
+                  }, child: Text("Add some items?"),style: ElevatedButton.styleFrom(backgroundColor: Colors.red,elevation: dimentions.width30),),
+                  SizedBox(height: dimentions.height50,),
+                  Container(height: dimentions.width150*2,width:dimentions.width150*2,
+                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage("images/empty catt.png"),fit: BoxFit.fill)),
+                  ),
+                  SizedBox(height: dimentions.height50,),
+                  Text("Opps!! Cart is empty..",style: GoogleFonts.nunito(fontSize: 20),)
+                ],
+              ),
+            ),);
+          })
       ),
     );
   }

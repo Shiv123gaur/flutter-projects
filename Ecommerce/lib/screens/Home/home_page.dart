@@ -1,8 +1,13 @@
 import 'package:ecommerce/controllers/cart_controller.dart';
+import 'package:ecommerce/screens/Account/Account_info.dart';
 import 'package:ecommerce/screens/Home/home_food_page.dart';
 import 'package:ecommerce/screens/cart/cart_home.dart';
+import 'package:ecommerce/screens/cart/order_history.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../Auth/SingnIn.dart';
+import '../Auth/SingnUp.dart';
 
 class Home_page extends StatefulWidget {
   const Home_page({Key? key}) : super(key: key);
@@ -15,9 +20,9 @@ class _Home_pageState extends State<Home_page> {
   int currentPage = 0;
   List pages = [
     HomeFoodPage(),
-    Container(child: Center(child: Text("This is the history page"),),),
-    Get.find<CartController>().CartTotal<=0?HomeFoodPage():Cart_Home(),
-    Container(child: Center(child: Text("This is the profile page"),),)
+    Sign_Up_Page(),
+    History(),
+    Account_Info()
   ];
   @override
   Widget build(BuildContext context) {

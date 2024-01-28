@@ -9,11 +9,18 @@ import 'package:ecommerce/screens/Home/home_food_page.dart';
 import 'package:ecommerce/screens/Home/home_page.dart';
 import 'package:ecommerce/screens/cart/cart_home.dart';
 import 'package:ecommerce/screens/food/popularFoodDetails.dart';
+import 'package:ecommerce/screens/splashscreen/SplashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce/widgets/trial.dart';
 import 'package:ecommerce/screens/food/recommended_food.dart';
 import 'package:ecommerce/helper/dependencies.dart' as dep;
+
+import 'controllers/cart_controller.dart';
+
+
+
+
 
 
 
@@ -48,13 +55,17 @@ class _myappState extends State<myapp> {
   }
   @override
   Widget build(BuildContext context) {
-    Get.find<PopularProductController>().getPopularProductList();
-    Get.find<Recommended_products_Controller>().getRecommended_products_list();
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.go_to_home(),
-      getPages: Routes.routes,
-    );
+    Get.find<CartController>().GetStoredData;
+    return GetBuilder<PopularProductController>(builder:(_){
+      return GetBuilder<Recommended_products_Controller>(builder: (_){
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          //home: Splash_Screen(),
+          initialRoute: Routes.go_to_splashScreen(),
+          getPages: Routes.routes,
+        );
+      });
+    });
   }
 }
 
